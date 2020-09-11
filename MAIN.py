@@ -40,3 +40,30 @@ def eventGet():
 
         #detecting keyboard presses
             #figure this out
+
+
+
+##WINDOW CLASS##
+class Window():
+    def __init__(self, width, height, name, resizable = False):
+        self.width = width #screen width
+        self.height = height #screen height
+        self.name = name #screen title displayed
+        self.resizable = resizable #whether the screen can be resized by the user
+
+    def initScreen(self):
+        pygame.init()
+        if self.resizable:
+            self.windowSurface = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE, 32)
+        else:
+            self.windowSurface = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE, 32)
+        pygame.display.set_caption(self.name)
+
+    def screenUpdate(self):
+        global resizeWidth
+        global resizeHeight
+        if resizeWidth != None:
+            self.width = resizeHeight
+            self.height = resizeHeight
+            self.windowSurface = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE, 32)
+        pygame.screen.update()

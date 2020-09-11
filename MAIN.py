@@ -67,3 +67,27 @@ class Window():
             self.height = resizeHeight
             self.windowSurface = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE, 32)
         pygame.screen.update()
+
+
+
+##TEXT CLASS##
+class Text():
+    def __init__(self, font, fontsize, words, colourRGB, x, y):
+        self.font = font #the font (duh)
+        self.fontsize = fontsize #the size of the font (shock horror)
+        self.words = words #the actual text
+        self.colour = colourRGB #colour in form (R,G,B)
+        self.x = x #the x coordinate for the screen
+        self.y = y #the y coordinate for the screen
+
+        self.font = pygame.font.SysFont(self.font, self.fontsize) #gets the font
+        self.text = self.font.render(self.words, True, self.colour) #creates the text in the font required
+        self.textRect = self.text.get_rect() #Draws box around text for alignment
+        self.textRect.left = x #sets x coord
+        self.textRect.top = y #sets y coord
+
+    def showText(self, window):
+        window.windowSurface.blit(self.text, self.textRect) #blits the text to the screen
+
+
+    

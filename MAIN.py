@@ -1,3 +1,38 @@
+assert __name__ != "__main__", "This is a python module and should not be run directly"
+
+# from pyfiglet import Figlet
+# f = Figlet(font='big')
+# print(f.renderText('PyGame Helper'))
+
+startText = """
+Thank You for using
+ _____        _____                        _    _      _
+|  __ \      / ____|                      | |  | |    | |
+| |__) |   _| |  __  __ _ _ __ ___   ___  | |__| | ___| |_ __   ___ _ __
+|  ___/ | | | | |_ |/ _` | '_ ` _ \ / _ \ |  __  |/ _ \ | '_ \ / _ \ '__|
+| |   | |_| | |__| | (_| | | | | | |  __/ | |  | |  __/ | |_) |  __/ |
+|_|    \__, |\_____|\__,_|_| |_| |_|\___| |_|  |_|\___|_| .__/ \___|_|
+        __/ |                                           | |
+       |___/                                            |_|
+
+See our github at https://github.com/LordFarquhar/pygamehelper for documentation, to report bugs and suggest improvements
+Thanks to LordFarquhar and royalJames99 our main developers
+"""
+
+endText = """
+Thank You for using
+ _____        _____                        _    _      _
+|  __ \      / ____|                      | |  | |    | |
+| |__) |   _| |  __  __ _ _ __ ___   ___  | |__| | ___| |_ __   ___ _ __
+|  ___/ | | | | |_ |/ _` | '_ ` _ \ / _ \ |  __  |/ _ \ | '_ \ / _ \ '__|
+| |   | |_| | |__| | (_| | | | | | |  __/ | |  | |  __/ | |_) |  __/ |
+|_|    \__, |\_____|\__,_|_| |_| |_|\___| |_|  |_|\___|_| .__/ \___|_|
+        __/ |                                           | |
+       |___/                                            |_|
+
+We hope you enjoyed the experience!
+"""
+
 import pygame
 import sys
 from pygame.locals import *
@@ -106,6 +141,7 @@ class Window():
 
     # user start gameloop
     def startInternalGameLoop(self, targetFps, targetTps):
+        print(startText)
         # setup default variables for timing
         SPT = 1.0/float(targetTps)  # seconds per tick
         SPR = 1.0/float(targetFps) # seconds per render
@@ -140,6 +176,7 @@ class Window():
         for event in pygame.event.get():
             # detect screen close
             if event.type == QUIT:
+                print(endText)
                 pygame.quit()
                 quit()
 

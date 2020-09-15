@@ -74,6 +74,16 @@ class COLOUR(Const):
         # no locked attribute, means the user can add their own colours
 Colour = COLOUR()
 
+class WINDOW_FLAGS(Const):
+    def __init__(self):
+        self.fullscreen = pygame.FULLSCREEN | pygame.HWSURFACE
+        self.resizable = pygame.RESIZABLE
+        self.noframe = pygame.NOFRAME
+
+# pygame.FULLSCREEN    create a fullscreen display
+# pygame.RESIZABLE     display window should be sizeable
+# pygame.NOFRAME       display window will have no border or controls
+# pygame.HWSURFACE     hardware accelerated, only in FULLSCREEN
 
 ##WINDOW CLASS##
 class Window():
@@ -85,17 +95,7 @@ class Window():
         self.resizable = resizable  # whether the screen can be resized by the user
 
         # flags the user should be able to use
-        # pygame.FULLSCREEN    create a fullscreen display
-        # pygame.RESIZABLE     display window should be sizeable
-        # pygame.NOFRAME       display window will have no border or controls
-
-        # flags we should consider
-        # pygame.HWSURFACE     hardware accelerated, only in FULLSCREEN
-
-        # flags I think we should ignore
-        # pygame.DOUBLEBUF     recommended for HWSURFACE or OPENGL
-        # pygame.OPENGL        create an opengl renderable display
-
+        
         self.frameCount = 0
         self.tickCount = 0
 

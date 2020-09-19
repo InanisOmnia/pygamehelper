@@ -248,3 +248,16 @@ class Text():
     def getDimensions(self):
         width, height = self.text.get_width(), self.text.get_height()
         return width, height
+
+
+
+## Polar and Cartesian conversion functions in pure pygame ##
+
+def cartesian(r, phi): # r is a length, phi is an angle measured from negative y (North)
+    cartesian = pygame.math.Vector2()
+    cartesian.from_polar((r, phi))
+    return(cartesian.x, cartesian.y) # returned as tuple in form (x component, y component)
+
+def polar(x, y): # x coord, y coord
+    polar = pygame.math.Vector2(x, y) 
+    return polar.as_polar() # returned as tuple in form (r, phi)

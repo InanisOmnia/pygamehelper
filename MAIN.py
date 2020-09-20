@@ -35,8 +35,8 @@ We hope you enjoyed the experience!
 
 import pygame
 import sys
-from pygame.locals import *
 import time
+
 
 # Constant base class used to create Constats in python
 class Const: 
@@ -76,9 +76,9 @@ Colour = COLOUR()
 
 class WINDOW_FLAGS(Const):
     def __init__(self):
-        self.fullscreen = pygame.FULLSCREEN | pygame.HWSURFACE
-        self.resizable = pygame.RESIZABLE
-        self.noframe = pygame.NOFRAME
+        self.fullscreen = pygame.locals.FULLSCREEN | pygame.locals.HWSURFACE
+        self.resizable = pygame.loalcs.RESIZABLE
+        self.noframe = pygame.locals.NOFRAME
 
 # pygame.FULLSCREEN    create a fullscreen display
 # pygame.RESIZABLE     display window should be sizeable
@@ -100,8 +100,8 @@ class Window():
         self.tickCount = 0
 
         # user bound methods
-        self.boundTick = lambda delta : None
-        self.boundRender = lambda fps : None
+        self.boundTick = lambda tps, delta : None
+        self.boundRender = lambda fps, delta : None
 
         self.boundKeyDown = lambda k : None
         self.boundKeyUp = lambda k : None
@@ -133,10 +133,10 @@ class Window():
         pygame.init()
         if self.resizable:
             self.windowSurface = pygame.display.set_mode(
-                (self.width, self.height), pygame.RESIZABLE, 32)
+                (self.width, self.height), pygame.locals.RESIZABLE, 32)
         else:
             self.windowSurface = pygame.display.set_mode(
-                (self.width, self.height), pygame.RESIZABLE, 32)
+                (self.width, self.height), pygame.locals.RESIZABLE, 32)
         pygame.display.set_caption(self.name)
 
     # user start gameloop
@@ -175,26 +175,26 @@ class Window():
         self.tickCount += 1 # increment the tick count
         for event in pygame.event.get():
             # detect screen close
-            if event.type == QUIT:
+            if event.type == pygame.locals.QUIT:
                 print(endText)
                 pygame.quit()
                 quit()
 
             # detect screen resizing and places new dimensions
             # into resizeWidth/Height that is used in Window class
-            if event.type == VIDEORESIZE:
+            if event.type == pygame.locals.VIDEORESIZE:
                 self.resizeWindow(event.w, event.h) # call the window resize event
 
             # detecting screen clicks
-            if event.type == MOUSEBUTTONDOWN:
+            if event.type == pygame.locals.MOUSEBUTTONDOWN:
                 self._mouseDown(event.button, pygame.mouse.get_pos()) # call the internal mousedown method
-            if event.type == MOUSEBUTTONUP:
+            if event.type == pygame.locals.MOUSEBUTTONUP:
                 self._mouseUp(event.button, pygame.mouse.get_pos()) # call the internal mouseup method
 
             # detecing keypresses
-            if event.type == pygame.KEYDOWN:
+            if event.type == pygame.locals.KEYDOWN:
                 self._keyDown(event.key) # call the internal keydown method
-            if event.type == pygame.KEYUP:
+            if event.type == pygame.locals.KEYUP:
                 self._keyUp(event.key) # call the internal keyup method
 
         self.boundTick(delta, tps) # call the user defined tick method
@@ -221,7 +221,7 @@ class Window():
         self.width = width # set the window width
         self.height = height # set the window height
         self.windowSurface = pygame.display.set_mode(
-            (self.width, self.height), pygame.RESIZABLE, 32) # redefine the surface
+            (self.width, self.height), pygame.locals.RESIZABLE, 32) # redefine the surface
         pygame.display.update() # update the entire window
 
 
@@ -255,7 +255,7 @@ class Text():
 
 def cartesian(r, phi): # r is a length, phi is an angle measured from negative y (North)
     cartesian = pygame.math.Vector2()
-    cartesian.from_polar((r, phi))
+    cartesian.from_polar((r, phi%360))
     return(cartesian.x, cartesian.y) # returned as tuple in form (x component, y component)
 
 def polar(x, y): # x coord, y coord

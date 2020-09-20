@@ -27,13 +27,16 @@ You can change the name you would like to import it as but for the purposes of t
 
 Now PyGameHelper is in your project and ready to be used!
 
-## Window
+## Creating a Window
 
 The window is what the user sees and the thing they interact with so its important to have one  
     
 The Window class takes three arguments:
  - Size: a tuple in the form (width, height)
  - Title: a string that will be displayed in the title bar
+ - Flags: an array of WindowFlags which can be access through `pgh.Window`
 
-Create one by typing `window = pgh.Window(500, 500, "Hello World")`  
+Create a resizable window 
+
+`window = pgh.Window((500, 500), "Hello World" [pgh.Window_Flags.resizable])`  
   

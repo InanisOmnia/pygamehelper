@@ -37,6 +37,7 @@ import pygame
 import pygame.locals as plocals
 import sys
 import time
+from functools import reduce
 
 
 # Constant base class used to create Constats in python
@@ -77,9 +78,10 @@ Colour = COLOUR()
 
 class WINDOW_FLAGS(Const):
     def __init__(self):
-        self.fullscreen = plocals.FULLSCREEN |plocals.HWSURFACE
-        self.resizable = pygame.loalcs.RESIZABLE
+        self.fullscreen = plocals.FULLSCREEN | plocals.HWSURFACE
+        self.resizable = plocals.RESIZABLE
         self.noframe = plocals.NOFRAME
+Window_Flags = WINDOW_FLAGS()
 
 # pygame.FULLSCREEN    create a fullscreen display
 # pygame.RESIZABLE     display window should be sizeable
@@ -88,12 +90,15 @@ class WINDOW_FLAGS(Const):
 
 ##WINDOW CLASS##
 class Window():
-    def __init__(self, size, title, flags):
+    def __init__(self, size: tuple, title: str, flags: list):
         self.width = size[0]  # screen width
         self.height = size[0]  # screen height
         self.title = title  # screen title displayed
 
-        self.resizable = None #resizable  # whether the screen can be resized by the user
+        self.flags = flags #resizable  # whether the screen can be resized by the user
+        self.bitflags = None
+        if len(self.flags) != 0:
+            self.bitflags = reduce(lambda x, y: x | y, self.flags) 
 
         # flags the user should be able to use
         
@@ -101,14 +106,16 @@ class Window():
         self.tickCount = 0
 
         # user bound methods
-        self.boundTick = lambda tps, delta : None
-        self.boundRender = lambda fps, delta : None
+        self.boundTick = lambda delta, tps : None
+        self.boundRender = lambda delta, fps : None
 
         self.boundKeyDown = lambda k : None
         self.boundKeyUp = lambda k : None
 
         self.boundMouseDown = lambda b, pos : None
         self.boundMouseUp = lambda b, pos : None
+
+        self.boundEnd = lambda : None
 
     # user helper bind methods
     def bindTick(self, tick):
@@ -129,15 +136,16 @@ class Window():
     def bindMouseUp(self, mouseUp):
         self.boundMouseUp = mouseUp
 
+    def bindEnd(self, end):
+        self.boundEnd = end
+
     # user setup screen
     def initScreen(self):
         pygame.init()
-        if self.resizable:
-            self.windowSurface = pygame.display.set_mode(
-                (self.width, self.height),plocals.RESIZABLE, 32)
+        if self.bitflags:
+            self.windowSurface = pygame.display.set_mode((self.width, self.height), self.bitflags, 32)
         else:
-            self.windowSurface = pygame.display.set_mode(
-                (self.width, self.height),plocals.RESIZABLE, 32)
+            self.windowSurface = pygame.display.set_mode((self.width, self.height), 32)
         pygame.display.set_caption(self.title)
 
     # user start gameloop
@@ -176,26 +184,24 @@ class Window():
         self.tickCount += 1 # increment the tick count
         for event in pygame.event.get():
             # detect screen close
-            if event.type ==plocals.QUIT:
-                print(endText)
-                pygame.quit()
-                quit()
+            if event.type == plocals.QUIT:
+                self._end()
 
             # detect screen resizing and places new dimensions
             # into resizeWidth/Height that is used in Window class
-            if event.type ==plocals.VIDEORESIZE:
+            if event.type == plocals.VIDEORESIZE:
                 self.resizeWindow(event.w, event.h) # call the window resize event
 
             # detecting screen clicks
-            if event.type ==plocals.MOUSEBUTTONDOWN:
+            if event.type == plocals.MOUSEBUTTONDOWN:
                 self._mouseDown(event.button, pygame.mouse.get_pos()) # call the internal mousedown method
-            if event.type ==plocals.MOUSEBUTTONUP:
+            if event.type == plocals.MOUSEBUTTONUP:
                 self._mouseUp(event.button, pygame.mouse.get_pos()) # call the internal mouseup method
 
             # detecing keypresses
-            if event.type ==plocals.KEYDOWN:
+            if event.type == plocals.KEYDOWN:
                 self._keyDown(event.key) # call the internal keydown method
-            if event.type ==plocals.KEYUP:
+            if event.type == plocals.KEYUP:
                 self._keyUp(event.key) # call the internal keyup method
 
         self.boundTick(delta, tps) # call the user defined tick method
@@ -218,6 +224,12 @@ class Window():
     def _keyUp(self, key):
         self.boundKeyUp(key) # call the user defined keyup method
     
+    def _end(self):
+        self.boundEnd()
+        print(endText)
+        pygame.quit()
+        quit()
+
     def resizeWindow(self, width, height):
         self.width = width # set the window width
         self.height = height # set the window height
@@ -246,7 +258,7 @@ class Text():
         # blits the text to the screen
         window.windowSurface.blit(self.text, self.textRect)
     
-    def getDimensions(self):
+    def getDimensions(self) -> tuple:
         width, height = self.text.get_width(), self.text.get_height()
         return width, height
 

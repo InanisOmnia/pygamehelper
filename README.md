@@ -9,8 +9,8 @@ To get PyGame Helper, go to the projects  [Releases](https://github.com/LordFarq
   
 Extract it using your favoured method  
   
-Locate the `MAIN.py` file and copy and paste it into your project directory  
-  
+Locate the `PyGameHelper.py` file and copy and paste it into your project directory  
+
 ## Using the Module  
   
 To use the module you must first import it  
@@ -19,7 +19,7 @@ To use the module you must first import it
 import PyGameHelper as pgh
 ```
 
-For further usage help see our [GitHub pages](documentation/contents.md)
+For further usage help see our [Documentation](documentation/contents.md)
 
 ## License  
 ![Creative Commons Attribute - NonCommercial](resources/license/licenseImage.png)

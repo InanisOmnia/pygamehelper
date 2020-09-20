@@ -16,10 +16,10 @@ Locate the `MAIN.py` file and copy and paste it into your project directory
 To use the module you must first import it  
   
 ```python
-import MAIN as PyGameHelper
+import PyGameHelper as pgh
 ```
 
-For further usage help see our [GitHub pages](https://www.TODO)
+For further usage help see our [GitHub pages](documentation/contents.md)
 
 ## License  
 ![Creative Commons Attribute - NonCommercial](resources/license/licenseImage.png)

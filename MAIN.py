@@ -34,6 +34,7 @@ We hope you enjoyed the experience!
 """
 
 import pygame
+import pygame.locals as plocals
 import sys
 import time
 
@@ -76,9 +77,9 @@ Colour = COLOUR()
 
 class WINDOW_FLAGS(Const):
     def __init__(self):
-        self.fullscreen = pygame.locals.FULLSCREEN | pygame.locals.HWSURFACE
+        self.fullscreen = plocals.FULLSCREEN |plocals.HWSURFACE
         self.resizable = pygame.loalcs.RESIZABLE
-        self.noframe = pygame.locals.NOFRAME
+        self.noframe = plocals.NOFRAME
 
 # pygame.FULLSCREEN    create a fullscreen display
 # pygame.RESIZABLE     display window should be sizeable
@@ -87,12 +88,12 @@ class WINDOW_FLAGS(Const):
 
 ##WINDOW CLASS##
 class Window():
-    def __init__(self, width, height, name, resizable=False):
-        self.width = width  # screen width
-        self.height = height  # screen height
-        self.name = name  # screen title displayed
+    def __init__(self, size, title, flags):
+        self.width = size[0]  # screen width
+        self.height = size[0]  # screen height
+        self.title = title  # screen title displayed
 
-        self.resizable = resizable  # whether the screen can be resized by the user
+        self.resizable = None #resizable  # whether the screen can be resized by the user
 
         # flags the user should be able to use
         
@@ -133,11 +134,11 @@ class Window():
         pygame.init()
         if self.resizable:
             self.windowSurface = pygame.display.set_mode(
-                (self.width, self.height), pygame.locals.RESIZABLE, 32)
+                (self.width, self.height),plocals.RESIZABLE, 32)
         else:
             self.windowSurface = pygame.display.set_mode(
-                (self.width, self.height), pygame.locals.RESIZABLE, 32)
-        pygame.display.set_caption(self.name)
+                (self.width, self.height),plocals.RESIZABLE, 32)
+        pygame.display.set_caption(self.title)
 
     # user start gameloop
     def startInternalGameLoop(self, targetFps, targetTps):
@@ -175,26 +176,26 @@ class Window():
         self.tickCount += 1 # increment the tick count
         for event in pygame.event.get():
             # detect screen close
-            if event.type == pygame.locals.QUIT:
+            if event.type ==plocals.QUIT:
                 print(endText)
                 pygame.quit()
                 quit()
 
             # detect screen resizing and places new dimensions
             # into resizeWidth/Height that is used in Window class
-            if event.type == pygame.locals.VIDEORESIZE:
+            if event.type ==plocals.VIDEORESIZE:
                 self.resizeWindow(event.w, event.h) # call the window resize event
 
             # detecting screen clicks
-            if event.type == pygame.locals.MOUSEBUTTONDOWN:
+            if event.type ==plocals.MOUSEBUTTONDOWN:
                 self._mouseDown(event.button, pygame.mouse.get_pos()) # call the internal mousedown method
-            if event.type == pygame.locals.MOUSEBUTTONUP:
+            if event.type ==plocals.MOUSEBUTTONUP:
                 self._mouseUp(event.button, pygame.mouse.get_pos()) # call the internal mouseup method
 
             # detecing keypresses
-            if event.type == pygame.locals.KEYDOWN:
+            if event.type ==plocals.KEYDOWN:
                 self._keyDown(event.key) # call the internal keydown method
-            if event.type == pygame.locals.KEYUP:
+            if event.type ==plocals.KEYUP:
                 self._keyUp(event.key) # call the internal keyup method
 
         self.boundTick(delta, tps) # call the user defined tick method
@@ -221,7 +222,7 @@ class Window():
         self.width = width # set the window width
         self.height = height # set the window height
         self.windowSurface = pygame.display.set_mode(
-            (self.width, self.height), pygame.locals.RESIZABLE, 32) # redefine the surface
+            (self.width, self.height),plocals.RESIZABLE, 32) # redefine the surface
         pygame.display.update() # update the entire window
 
 

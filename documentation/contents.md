@@ -1,3 +1,3 @@
 # Contents
 
-[Heading](#link-to-title)
+[Getting Started](gettingStarted.md)

@@ -1,7 +1,7 @@
 from MAIN import *
 
 # create the window
-w = Window(500, 500, "Hello World")
+w = Window((500, 500), "Hello World", [])
 # initialise the window
 w.initScreen()
 

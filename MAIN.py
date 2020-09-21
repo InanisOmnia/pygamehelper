@@ -14,7 +14,6 @@ Thank You for using
 |_|    \__, |\_____|\__,_|_| |_| |_|\___| |_|  |_|\___|_| .__/ \___|_|
         __/ |                                           | |
        |___/                                            |_|
-
 See our github at https://github.com/LordFarquhar/pygamehelper for documentation, to report bugs and suggest improvements
 Thanks to LordFarquhar and royalJames99 our main developers
 """
@@ -29,7 +28,6 @@ Thank You for using
 |_|    \__, |\_____|\__,_|_| |_| |_|\___| |_|  |_|\___|_| .__/ \___|_|
         __/ |                                           | |
        |___/                                            |_|
-
 We hope you enjoyed the experience!
 """
 
@@ -38,9 +36,10 @@ import pygame.locals as plocals
 import sys
 import time
 from functools import reduce
+import math
 
 
-# Constant base class used to create Constats in python
+# Constant base class used to create Constants in python
 class Const: 
     """
     forbids to overwrite existing variables 
@@ -147,6 +146,7 @@ class Window():
         else:
             self.windowSurface = pygame.display.set_mode((self.width, self.height), 32)
         pygame.display.set_caption(self.title)
+        self.input_class = Input_Handler(self)
 
     # user start gameloop
     def startInternalGameLoop(self, targetFps, targetTps):
@@ -204,12 +204,14 @@ class Window():
             if event.type == plocals.KEYUP:
                 self._keyUp(event.key) # call the internal keyup method
 
+        self.input_class.tick()
         self.boundTick(delta, tps) # call the user defined tick method
 
     def _render(self, delta, fps):
         self.frameCount += 1 # increment the framecount
-        self.windowSurface.fill(Colour.White) # automatically blank the screen
+        self.windowSurface.fill(Colour.Black) # automatically blank the screen
         self.boundRender(delta, fps) # call the user defined render method
+        self.input_class.render()
         pygame.display.flip() # refresh the necessary parts of the screen (more efficient than full update)
 
     def _mouseDown(self, button, pos):
@@ -217,6 +219,7 @@ class Window():
     
     def _mouseUp(self, button, pos):
         self.boundMouseUp(button, pos) # call the user defined mouseup method
+        self.input_class.check = True
 
     def _keyDown(self, key):
         self.boundKeyDown(key) # call the user defined keydown method
@@ -263,7 +266,6 @@ class Text():
         return width, height
 
 
-
 ## Polar and Cartesian conversion functions in pure pygame ##
 
 def cartesian(r, phi): # r is a length, phi is an angle measured from negative y (North)
@@ -274,3 +276,41 @@ def cartesian(r, phi): # r is a length, phi is an angle measured from negative y
 def polar(x, y): # x coord, y coord
     polar = pygame.math.Vector2(x, y) 
     return polar.as_polar() # returned as tuple in form (r, phi)
+
+## Inputs ##
+class Button():
+    def __init__(self, pos, radius, window):
+        self.pos = pos
+        self.radius = radius
+        self.state = False
+        window.input_class.all_inputs.insert(0, self)
+    def check_mouse_click(self, mouse_pos):
+        if math.dist(self.pos, mouse_pos) < self.radius:
+            self.state = not self.state
+            return(True)
+        self.check = False
+    def render(self, surface):
+        if self.state == False:
+            pygame.draw.circle(surface, (0, 255, 0), self.pos, self.radius)
+        else:
+            pygame.draw.circle(surface, (255, 0, 0), self.pos, self.radius)
+
+class Input_Handler():
+    def __init__(self, window):
+        self.window = window
+        self.all_inputs = []
+        self.check = False
+    def tick(self):
+        if self.check == True:
+            mousepos = pygame.mouse.get_pos()
+            for input_item in self.all_inputs:
+                if input_item.check_mouse_click(mousepos) == True:
+                    break
+            self.check = False
+            print("Check")
+    def render(self):
+        for i in range(len(self.all_inputs) - 1, -1, -1):
+            self.all_inputs[i].render(self.window.windowSurface)
+
+
+  

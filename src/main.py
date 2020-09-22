@@ -1,91 +1,14 @@
 assert __name__ != "__main__", "This is a python module and should not be run directly"
 
-# from pyfiglet import Figlet
-# f = Figlet(font='big')
-# print(f.renderText('PyGame Helper'))
-
-startText = """
-Thank You for using
- _____        _____                        _    _      _
-|  __ \      / ____|                      | |  | |    | |
-| |__) |   _| |  __  __ _ _ __ ___   ___  | |__| | ___| |_ __   ___ _ __
-|  ___/ | | | | |_ |/ _` | '_ ` _ \ / _ \ |  __  |/ _ \ | '_ \ / _ \ '__|
-| |   | |_| | |__| | (_| | | | | | |  __/ | |  | |  __/ | |_) |  __/ |
-|_|    \__, |\_____|\__,_|_| |_| |_|\___| |_|  |_|\___|_| .__/ \___|_|
-        __/ |                                           | |
-       |___/                                            |_|
-See our github at https://github.com/LordFarquhar/pygamehelper for documentation, to report bugs and suggest improvements
-Thanks to LordFarquhar and royalJames99 our main developers
-"""
-
-endText = """
-Thank You for using
- _____        _____                        _    _      _
-|  __ \      / ____|                      | |  | |    | |
-| |__) |   _| |  __  __ _ _ __ ___   ___  | |__| | ___| |_ __   ___ _ __
-|  ___/ | | | | |_ |/ _` | '_ ` _ \ / _ \ |  __  |/ _ \ | '_ \ / _ \ '__|
-| |   | |_| | |__| | (_| | | | | | |  __/ | |  | |  __/ | |_) |  __/ |
-|_|    \__, |\_____|\__,_|_| |_| |_|\___| |_|  |_|\___|_| .__/ \___|_|
-        __/ |                                           | |
-       |___/                                            |_|
-We hope you enjoyed the experience!
-"""
 
 import pygame
 import pygame.locals as plocals
-import sys
 import time
 from functools import reduce
 import math
 
-
-# Constant base class used to create Constants in python
-class Const: 
-    """
-    forbids to overwrite existing variables 
-    forbids to add new values if "locked" variable exists
-    """ 
-    def __setattr__(self,name,value):
-        if("locked" in self.__dict__):    
-            raise NameError("Class is locked can not add any attributes (%s)"%name)
-        if (name in self.__dict__):
-            raise NameError("Can't rebind const(%s)"%name)
-        self.__dict__[name]=value
-
-# constant class for alphabets
-class ALPHABET(Const):
-    def __init__(self):
-        self.resAlphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
-               "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "]
-        self.extAlphabet = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
-               ";", ":", ",", ".", "'", '"', "!", "£", "$", "%", "^", "&", "*", "(", ")", "<", ">", "?", "@", "#", "~", "-", "_", "[", "]", "{", "}", "+", "=", "|", " ", "/", "`", "¬", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        self.locked = 1 # this will create lock for adding constants 
-Alphabet = ALPHABET()
-
-# constant class for colours
-class COLOUR(Const):
-    def __init__(self):
-        self.White = (255, 255, 255)
-        self.Black = (0, 0, 0)
-        
-        self.Red = (255, 0, 0)
-        self.Green = (0, 0, 255)
-        self.Blue = (0, 255, 0)
-        
-        # no locked attribute, means the user can add their own colours
-Colour = COLOUR()
-
-class WINDOW_FLAGS(Const):
-    def __init__(self):
-        self.fullscreen = plocals.FULLSCREEN | plocals.HWSURFACE
-        self.resizable = plocals.RESIZABLE
-        self.noframe = plocals.NOFRAME
-Window_Flags = WINDOW_FLAGS()
-
-# pygame.FULLSCREEN    create a fullscreen display
-# pygame.RESIZABLE     display window should be sizeable
-# pygame.NOFRAME       display window will have no border or controls
-# pygame.HWSURFACE     hardware accelerated, only in FULLSCREEN
+from src.constants.text import *
+from src.constants import colours, window_flags, alphabet
 
 ##WINDOW CLASS##
 class Window():
@@ -209,7 +132,7 @@ class Window():
 
     def _render(self, delta, fps):
         self.frameCount += 1 # increment the framecount
-        self.windowSurface.fill(Colour.Black) # automatically blank the screen
+        self.windowSurface.fill(colours.Black) # automatically blank the screen
         self.boundRender(delta, fps) # call the user defined render method
         self.input_class.render()
         pygame.display.flip() # refresh the necessary parts of the screen (more efficient than full update)

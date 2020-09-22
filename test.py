@@ -1,7 +1,8 @@
-import MAIN as pgh
+import src as pgh
+from src.constants import colours, window_flags
 
 # create the window
-w = pgh.Window((500, 500), "Hello World", [])
+w = pgh.Window((500, 500), "Hello World", [window_flags.resizable])
 # initialise the window
 w.initScreen()
 
@@ -21,7 +22,7 @@ w.bindTick(tick)
 w.bindRender(render)
 w.bindMouseDown(mousedown)
 
-t = pgh.Text("comicsansms", 40, "Hello World", pgh.Colour.Blue)
+t = pgh.Text("comicsansms", 40, "Hello World", colours.Blue)
 
 # start the gameloop
 w.startInternalGameLoop(60, 20)

@@ -260,6 +260,11 @@ class Text():
         self.textRect.top = y  # sets y coord
         # blits the text to the screen
         window.windowSurface.blit(self.text, self.textRect)
+        
+    def render_center(self, window, center):
+        self.textRect.center = center
+        # blits the text to the screen
+        window.windowSurface.blit(self.text, self.textRect)
     
     def getDimensions(self) -> tuple:
         width, height = self.text.get_width(), self.text.get_height()
@@ -278,22 +283,55 @@ def polar(x, y): # x coord, y coord
     return polar.as_polar() # returned as tuple in form (r, phi)
 
 ## Inputs ##
-class Button():
-    def __init__(self, pos, radius, window):
-        self.pos = pos
-        self.radius = radius
+class Button_Circle():
+    def __init__(self, pos, radius, window, name):
+        self.pos = pos # pos as tuple
+        self.radius = radius 
         self.state = False
-        window.input_class.all_inputs.insert(0, self)
-    def check_mouse_click(self, mouse_pos):
+        self.name = Text("calibri", 10, name, (0, 0, 0))
+        self.window = window
+        self.window.input_class.all_inputs.insert(0, self) # gives Input_Handle access to itself
+        self.name.textRect.center = self.pos
+
+        if math.dist(self.pos, self.name.textRect.topleft) > self.radius and math.dist(self.pos, self.name.textRect.bottomright) > self.radius:
+            print(math.dist(self.pos, self.name.textRect.topleft))
+            raise NameError("Name too big, truncate or reduce font size")
+
+    def check_mouse_click(self, mouse_pos): # check if the button has been clicked
         if math.dist(self.pos, mouse_pos) < self.radius:
             self.state = not self.state
             return(True)
-        self.check = False
+
     def render(self, surface):
         if self.state == False:
             pygame.draw.circle(surface, (0, 255, 0), self.pos, self.radius)
         else:
             pygame.draw.circle(surface, (255, 0, 0), self.pos, self.radius)
+        self.name.render_center(self.window, self.pos)
+
+class Button_Square():
+    def __init__(self, pos, size, window, name):
+        self.rect = pygame.Rect(0, 0, 0, 0)
+        self.rect.center = pos
+        self.rect.w = 2 * size
+        self.rect.h = 2 * size
+        self.state = False
+        self.name = Text("Calibri", 10, name, (0, 0, 0))
+        self.window = window
+        self.window.input_class.all_inputs.insert(0, self)
+        self.name.textRect.center = self.rect.center
+        if self.rect.contains(self.name.textRect) != True:
+            raise NameError("Name too big, truncate or reduce font size")        
+    def check_mouse_click(self, mouse_pos):
+        if self.rect.contains(pygame.Rect(mouse_pos, (0, 0))) == True:
+            self.state = not self.state
+            return(True)
+    def render(self, surface):
+        if self.state == False:
+            pygame.draw.rect(surface, (0, 255, 0), self.rect)
+        else:
+            pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        self.name.render_center(self.window, self.rect.center)
 
 class Input_Handler():
     def __init__(self, window):
@@ -312,5 +350,127 @@ class Input_Handler():
         for i in range(len(self.all_inputs) - 1, -1, -1):
             self.all_inputs[i].render(self.window.windowSurface)
 
+class Circle(): # IT ALL NEEDS ANNOTATING
+    def __init__(self, position, radius):
+        self.position = pygame.math.Vector2(position)
+        self.radius = radius
+    def __setattr__(self, name, value):
+        self.__dict__[name] = value
+        if name == "position":
+            self.__dict__["x"] = self.__dict__[name].x
+            self.__dict__["y"] = self.__dict__[name].y
+            
+        elif name == "x":
+            self.__dict__["position"] = pygame.math.Vector2(self.x, self.y)
 
+        elif name == "y":
+            self.__dict__["position"] = pygame.math.Vector2(self.x, self.y)
+
+        elif name == "radius":
+            if 0 > value:
+                self.normalize()
+            self.__dict__["diameter"] = self.radius * 2
+            self.__dict__["area"] = self.radius ** 2 * math.pi
+
+        elif name == "diameter":
+            self.__dict__["radius"] = self.diameter / 2
+            self.__dict__["area"] = self.radius ** 2 * math.pi
+
+        elif name == "area":
+            self.__dict__["radius"] = math.sqrt(self.area / math.pi)
+            self.__dict__["diameter"] = self.radius / 2
+    def copy(self):
+        return Circle(self.postition, self.radius)
+
+    def move(self, x, y):
+        return Circle((self.pos.x + x, self.pos.y + y, self.radius))
+
+    def move_ip(self, x, y):
+        self.x += x
+        self.Y += y
+
+    def inflate(self, factor):
+        return Circle(self.position, self.radius + factor)
+
+    def inflate_ip(self, factor):
+        self.radius += factor
+
+    def clamp(self, circle):
+        return Circle(circle.position, self.radius)
+
+    def clamp_ip(self, circle):
+        self.position = circle.position
+
+    def clip(self, circle): # needs math optimisation
+        length = math.dist(self.position, circle.position)
+        length2 = abs(length - (self.radius + circle.radius))
+        newrad = length2 / 2
+        newdist = self.radius - newrad
+        newvec = pygame.math.Vector2(circle.x - self.x, circle.y - self.y)
+        newvec.scale_to_length(newdist)
+        return Circle((self.x + newvec.x, self.y + newvec.y), newrad)
+        
+    def clipline():
+        pass # waiting for math
+
+    def union(self, circle):
+        pass # waiting for math
+
+    def union_ip(self):
+        pass # waiting for math
+
+    def unionall(self):
+        pass # waiting for math
+
+    def unionall_ip(self):
+        pass # waiting for math
+
+    def normalize(self):
+        self.radius = abs(self.radius)
+
+    def contains(self, circle):
+        return math.dist(self.position, circle.position) + circle.radius <= self.radius
+
+    def collidepoint(self, v1, v2 = None):
+        if v2 == None:
+            test_for = v1
+        else:
+            test_for = (v1, v2)
+        return math.dist(self.position, test_for) <= self.radius        
+        
+    def collidecircle(self, circle):
+        return math.dist(self.position, circle.position) < self.radius + circle.radius
+        
+    def collidelist(self, circles):
+        for i in range(len(circles)):
+            if math.dist(self.position, circles[i].position) < self.radius + circles[i].radius:
+                return(i)
+
+    def collidelistall(self, circles):
+        for i in range(len(circles)):
+            if math.dist(self.position, circles[i].position) < self.radius + circles[i].radius:
+                   yield int(i)
+
+    def collidedict(self, circles, use_values = 0):
+        if use_values ==0:
+            for circle in circles:
+                if math.dist(self.position, circle.position) < self.radius + circle.radius:
+                    return tuple(circle, circles[circle])
+        else:
+            for key in circles:
+                circle = circles.get(key)
+                if math.dist(self.position, circle.position) < self.radius + circle.radius:
+                    return tuple((key, circle))                    
+            
+
+    def collidedictall(self, circles, use_values = 0):
+        if use_values == 0:
+            for circle in circles:
+                if math.dist(self.position, circle.position) < self.radius + circle.radius:
+                    yield tuple(circle, circles[circle])
+        else:
+            for key in circles:
+                circle = circles.get(key)
+                if math.dist(self.position, circle.position) < self.radius + circle.radius:
+                    yield tuple((key, circle))
   

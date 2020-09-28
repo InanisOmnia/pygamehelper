@@ -6,7 +6,7 @@ import pygame.locals as plocals
 import time
 from functools import reduce
 import math
-
+pygame.font.init() ## this is a kind of gapfill, there are better ways to do this
 from src.constants.text import *
 from src.constants import colours, window_flags, alphabet
 

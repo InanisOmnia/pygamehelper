@@ -64,11 +64,8 @@
                 <div class="intro2 clearfix">
                     <p><i class="fa fa-exclamation-triangle"></i>
                         PyGameHelper is brand new and is still in its first stages of development.<br>
-                        This means that barely anything will work as expected or at all and documentation is
-                        non-existant or wrong<br>
-                        For now please see our <a
-                            href="https://github.com/LordFarquhar/pygamehelper/blob/master/documentation/contents.md">documentation
-                            in markdown form </a>
+                        This means that many features are still to come and documentation is likely to be
+                        innaccurate<br>
                     </p>
                 </div>
 
@@ -85,10 +82,14 @@
                         <ul class="nav">
                             <li><a href="#line1">Getting Started</a>
                                 <ul class="nav">
-                                    <li><a href="#line1_1">Installing the Module</a></li>
-                                    <li><a href="#line1_2">Importing the Module</a></li>
+                                    <li><a href="#line1_1">Getting and Installing</a></li>
+                                    <li><a href="#line1_2">Importing</a></li>
+                                    <li><a href="#line1_3">Creating a Window</a></li>
+                                    <li><a href="#line1_4">Binding to events</a></li>
                                 </ul>
                             </li>
+                            <li><a href="#line2">Changelog</a>
+                            <li><a href="#line3">Copyright and License</a>
                         </ul>
                     </nav>
                 </div>
@@ -156,17 +157,134 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 id="line1_1">Getting and Installing</h4>
+                                <h4 id="line1_1">Getting and Installing the Module</h4>
                                 <p>Here we get the project from GitHub and install it</p>
                                 <p>PyGameHelper is currently accessed through GitHub and is not available on pypi or
                                     other python module installer services Therefore to use PyGameHelper, go to the
                                     projects <a href="https://github.com/LordFarquhar/pygamehelper/releases/" ,
-                                        target="_blank">Releases</a>, navigate to the most recent full release and
+                                        target="_blank">Releases</a>, navigate to the most recent <strong>full
+                                        release</strong> and
                                     download the source code</p>
                                 <p>Extract it using your favoured method</p>
-                                <p>Locate the PyGameHelper.py file and copy and paste it into your project directory</p>
+                                <pre class="brush: bash">
+                                    ├───.github
+                                    ├───examples
+                                    ├───src
+                                    ├───setup.py
+                                    └───README.md
+                                 </pre>
+                                <p>Ensure you are on the same directory as setup.py, open a terminal and type pip
+                                    install .</p>
+                                <pre class="brush: bash">
+                                    pip install .
+                                </pre>
+                            </div>
+
+                            <div class="col-md-12">
+                                <h4 id="line1_2">Importing the Module</h4>
+                                <div class="intro2 clearfix">
+                                    <p><i class="fa fa-info-circle"></i>
+                                        There are many different ways you can import the module, all of it at once,
+                                        under a placeholder name or only the parts you need<br>
+                                    </p>
+                                </div>
+                                <p>For the purposes of this example and documentation we will be importing as
+                                    follows<br>This line should be at the top of your program so that it can be accessed
+                                    throughout the rest of it</p>
+                                <pre class="brush: python">
+                                    import PyGameHelper as pgh
+                                </pre>
+                                <p>This means if at any point you need to access something from the module you prefix it
+                                    with <strong>pg.</strong></p>
 
                             </div>
+                            <!-- end col -->
+
+                            <div class="col-md-12">
+                                <h4 id="line1_3">Creating a Window</h4>
+                                <p>First things first lets ask PyGameHelper to make a window for us. Window is a class
+                                    within the package that will create a window for you.
+                                    <br>Don't worry this line of code won't make the window appear yet</p>
+                                <p>We want to make sure it has all the attributes we need, size, title and any other
+                                    window flags
+                                <pre class="brush: python">
+                                        w = pgh.Window((500, 500), "Hello World", [pgh.constants.window_flags.resizeable])
+                                    </pre>
+                                </p>
+
+                                <div class="intro2 clearfix">
+                                    <p><i class="fa fa-info-circle"></i>
+                                        There are definitely some neater ways of importing and using PyGameHelper's
+                                        constant variables but to make it clear for the purposes of this documentation
+                                        we shall be doing it like this<br>
+                                        If you would like to use the constants as normal in your module then its
+                                        recommended to import as below.
+                                    <pre class="brush: python">
+                                            import PyGameHelper as pgh
+                                            from PyGameHelper.constants import *
+                                        </pre>
+                                    Be careful not to overwrite the varibales
+                                    </p>
+                                </div>
+
+                                <p>Its almost runnable now! All we need to do is initialise the screen and start the
+                                    loop!
+                                <pre class="brush: python">
+                                        w.initScreen()
+                                        w.startInternalGameLoop(60, 20)
+                                    </pre>
+                                The two variables we passed are:
+                                <ol>
+                                    <li>The target frames per second (60)</li>
+                                    <li>The target ticks per second (20)</li>
+                                </ol>
+                                <img src="resources/images/docs/blank_window.png" alt="window"
+                                    class="img-responsive img-thumbnail" style="max-width: 70%;">
+                                </p>
+                                <h4 id="line1_4">Binding to events</h4>
+                                <p>An event can be the screen is clicked or a button is pressed and many others</p>
+                                <p>Now the basics of our screen is setup, we want to prepare the tick and render methods
+                                    <br>Render is called every time the screen is refreshed, usually this is quite fast
+                                    so your eyes don't notice any delay. So anything to do with displaying on the screen
+                                    goes here
+                                    <br>Tick is called on a regular basis, each time the game needs to update. So
+                                    anything to do with logic goes Here
+                                </p>
+                                <p>Firstly we are going to define a render method that just prints the fps and the delta
+                                    to the console (with some decimal place limiting so its reasonable)
+                                <pre class="brush: python">
+                                        def render(delta, fps):
+                                            print(f"{fps:.2f}fps {delta:.10f}delta")
+                                    </pre>
+                                <p>And a tick method that also just prints the tps and the delta to the console
+                                <pre class="brush: python">
+                                            def tick(delta, tps):
+                                                print(f"{tps:.2f}fps {delta:.10f}delta")
+                                        </pre>
+                                <div class="intro2 clearfix">
+                                    <p><i class="fa fa-info-circle"></i>
+                                        If you are unsure of how F-strings work checkout <a
+                                            href="https://realpython.com/python-f-strings/#f-strings-a-new-and-improved-way-to-format-strings-in-python"
+                                            target="_blank">realpython f-strings</a></p>
+                                </div>
+                                Now we bind these functions to those events. Binding must be done before we start the
+                                internal game loop
+                                <pre class="brush: python">
+                                    w = pgh.Window((500, 500), "Hello World", [pgh.constants.window_flags.resizeable]) # after This
+                                    # in here!
+                                    w.initScreen() # but before this
+                                    w.startInternalGameLoop(60, 20)
+                                </pre>
+                                <pre class="brush: python">
+                                    w.bindTick(tick)
+                                    w.bindRender(render)
+                                </pre>
+                                So we should see 60fps and 20tps printed to the console!<br>
+                                <img src="resources/images/docs/tick_render_in_console.png" alt="tick and render"
+                                    class="img-responsive img-thumbnail">
+                                </p>
+                            </div>
+
                             <!-- end col -->
                         </div>
                         <!-- end row -->
@@ -174,7 +292,7 @@
                     </section>
                     <!-- end section -->
 
-                    <section id="line10" class="section">
+                    <section id="line2" class="section">
 
                         <div class="row">
                             <div class="col-md-12 left-align">
@@ -193,17 +311,19 @@
 
                                 <hr>
 
-                                <h4>Changelog</h4>
+                                <h4>V0.1.0 - Sep 9th, 2020</h4>
 
-                                <pre class="brush: html">
+                                <pre class="brush: plain">
 
-                                        -----------------------------------------------------------------------------------------
-                                        Version 0.1.0 - Sep 9th, 2020
-                                        -----------------------------------------------------------------------------------------
+                                -----------------------------------------------------------------------------------------
+                                The Window Update
+                                -----------------------------------------------------------------------------------------
 
-                                        - window class
+                                - Added window class
+                                    ├ Allows creation of a pygame window
+                                    └ Managing of window resizes automagically handled! 
 
-                                      </pre>
+                                </pre>
                             </div>
                         </div>
                         <!-- end row -->
@@ -211,13 +331,14 @@
                     </section>
                     <!-- end section -->
 
-                    <section id="line11" class="section">
+                    <section id="line3" class="section">
 
                         <div class="row">
                             <div class="col-md-12 left-align">
-                                <h2 class="dark-text">Copyright and license <a href="#top">#back to top</a>
-                                    <hr>
-                                </h2>
+                                <h2 class="dark-text">Copyright and license <a href="#top">#back to top</a></h2>
+                                <!-- <br> -->
+                                <img src="/resources/images/licenseImage.png" alt="Creative Commons License">
+                                <hr>
                             </div>
                             <!-- end col -->
                         </div>
@@ -227,10 +348,10 @@
                             <div class="col-md-12">
 
                                 <p>Code and documentation held under the <a href="#" target="_blank">Creative
-                                        Commons</a> License.</p>
+                                        Commons</a> License. </p>
                                 <p>For more information about this license check <a
                                         href="https://creativecommons.org/licenses/by-nc-nd/4.0/"
-                                        target="_blank">Creative Commons by-nc-nd</a>.</p>
+                                        target="_blank">Creative Commons by-nc-nd 4.0</a>.</p>
 
                                 <p>Note: Thanks to <a href="https://github.com/surjithctly"
                                         target="_blank">surjithctly</a> for the use of his template which can be found
@@ -267,9 +388,9 @@
     <script src="resources/js/main.js"></script>
 
     <script src="resources/js/syntax-highlighter/scripts/shCore.js"></script>
-    <script src="resources/js/syntax-highlighter/scripts/shBrushXml.js"></script>
-    <script src="resources/js/syntax-highlighter/scripts/shBrushCss.js"></script>
-    <script src="resources/js/syntax-highlighter/scripts/shBrushJScript.js"></script>
+    <script src="resources/js/syntax-highlighter/scripts/shBrushBash.js"></script>
+    <script src="resources/js/syntax-highlighter/scripts/shBrushPython.js"></script>
+    <script src="resources/js/syntax-highlighter/scripts/shBrushPlain.js"></script>
 
 </body>
 

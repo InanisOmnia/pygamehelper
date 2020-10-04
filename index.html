@@ -82,10 +82,20 @@
                         <ul class="nav">
                             <li><a href="#line1">Getting Started</a>
                                 <ul class="nav">
-                                    <li><a href="#line1_1">Getting and Installing</a></li>
-                                    <li><a href="#line1_2">Importing</a></li>
-                                    <li><a href="#line1_3">Creating a Window</a></li>
-                                    <li><a href="#line1_4">Binding to events</a></li>
+                                    <li><a href="#line1_1">Setting Up</a>
+                                        <ul class="nav">
+                                            <li><a href="#line1_1_1">Getting and Installing</a></li>
+                                            <li><a href="#line1_1_2">Importing</a></li>
+                                            <li><a href="#line1_1_3">Creating a Window</a></li>
+                                            <li><a href="#line1_1_4">Binding to events</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#line1_2">Element Basics</a>
+                                        <ul class="nav">
+                                            <li><a href="#line1_2_1">Vectors</a></li>
+                                            <!-- <li><a href="#line1_2_1">Circles</a></li>		 -->
+                                        </ul>
+                                    </li>
                                 </ul>
                             </li>
                             <li><a href="#line2">Changelog</a>
@@ -157,7 +167,10 @@
 
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 id="line1_1">Getting and Installing the Module</h4>
+
+                                <h4 id="line1_1">Setting Up</h4>
+
+                                <h4 id="line1_1_1">Getting and Installing the Module</h4>
                                 <p>Here we get the project from GitHub and install it</p>
                                 <p>PyGameHelper is currently accessed through GitHub and is not available on pypi or
                                     other python module installer services Therefore to use PyGameHelper, go to the
@@ -181,7 +194,7 @@
                             </div>
 
                             <div class="col-md-12">
-                                <h4 id="line1_2">Importing the Module</h4>
+                                <h4 id="line1_1_2">Importing the Module</h4>
                                 <div class="intro2 clearfix">
                                     <p><i class="fa fa-info-circle"></i>
                                         There are many different ways you can import the module, all of it at once,
@@ -201,7 +214,7 @@
                             <!-- end col -->
 
                             <div class="col-md-12">
-                                <h4 id="line1_3">Creating a Window</h4>
+                                <h4 id="line1_1_3">Creating a Window</h4>
                                 <p>First things first lets ask PyGameHelper to make a window for us. Window is a class
                                     within the package that will create a window for you.
                                     <br>Don't worry this line of code won't make the window appear yet</p>
@@ -241,7 +254,10 @@
                                 <img src="resources/images/docs/blank_window.png" alt="window"
                                     class="img-responsive img-thumbnail" style="max-width: 70%;">
                                 </p>
-                                <h4 id="line1_4">Binding to events</h4>
+
+
+                                <h4 id="line1_1_4">Binding to events</h4>
+
                                 <p>An event can be the screen is clicked or a button is pressed and many others</p>
                                 <p>Now the basics of our screen is setup, we want to prepare the tick and render methods
                                     <br>Render is called every time the screen is refreshed, usually this is quite fast
@@ -283,6 +299,118 @@
                                 <img src="resources/images/docs/tick_render_in_console.png" alt="tick and render"
                                     class="img-responsive img-thumbnail">
                                 </p>
+
+                                <h4 id="line1_2">Element Basics</h4>
+
+                                <h4 id="line1_2_1">Using the Vector class</h4>
+                                <div class="intro2 clearfix">
+                                    <p><i class="fa fa-info-circle"></i>
+                                        For an introduction to Vectors: <a
+                                            href="https://www.dummies.com/education/science/physics/what-is-a-vector/"
+                                            target="_blank">Vectors for Dummies</a></p>
+                                </div>
+                                <p>Our Vectors are an alternative to pygame's "Vector2", designed with compatability and
+                                    ease of use in mind</p>
+                                <p>This Getting Started tutorial requires a little understanding of maths, not
+                                    interested?
+                                    <br>Feel free to skip and check out some other awesome tutorials
+                                </p>
+                                <p>Now lets look at how we can create a Vector</p>
+                                <p>There are two basic ways to initalise a Vector, for more methods look at the relevant
+                                    documentation</p>
+                                <pre class="brush: python">
+									myvector = pgh.Vector(10, 10) # --> Vector()
+									print(myvector)
+									## Output:
+									{'x': 10, 'y': 10}</pre>
+                                <pre class="brush: python">
+									myvector = pgh.Vector((10, 10)) # --> Vector()
+									print(myvector)
+									## Output:
+									{`x`: 10, `y`: 10}</pre>
+                                <p>Notice how they are the same Vector, pgh supports Vectors being assigned as a tuple
+                                    or individually for x, y.</p>
+                                <h5>Using Vectors</h5>
+                                <p>We're going to write a small simulation using Vectors to show off some of their
+                                    features. A box represented by a Rect()
+                                    is going to fall downwards, as if acted upon by gravity. This is easily implemented
+                                    by use of Vectors</p>
+                                <pre class="brush: python">
+									import PyGameHelper as pgh
+									w = pgh.Window((600, 600), "Gravity Demo", [])</pre>
+                                <p>These two lines create the window and prepare pgh to run your code.
+                                    This is creating a window called "w", we're going to give the window the caption
+                                    "Gravity Demo".
+                                    We also indicate we don't want any flags by passing "[]" an empty list.
+                                </p>
+                                <div class="intro2 clearfix">
+                                    <p><i class="fa fa-info-circle"></i>
+                                        Need a recap on initialising and setup? <a href="#line1_3" target="_blank">Look
+                                            no further than this Getting Started guide</a></p>
+                                </div>
+                                <p>Now we need to setup some global variables that describe the size location and
+                                    velocity of the box</p>
+                                <pre class="brush: python">
+								box = pgh.pygame.Rect(280, 0, 40, 40)
+								boxvel = pgh.Vector(0, 0)
+								gravity = pgh.Vector(0, 0.1)</pre>
+                                <p>The box is represented by the Rect object, it has been placed at the top of our
+                                    600x600 screen.
+                                    The vector boxvel was created with two ints or floats as shown earlier, this will be
+                                    used to keep track of the boxes velocity.
+                                    Gravity represents the magnitude and direction of gravity, it has currently been set
+                                    to -0.1 pixels per tick.</p>
+                                <p>Now we need to bind our render and tick funtions. We are going to have global tick()
+                                    and render() funtions that we can then bind.</p>
+                                <pre class="brush: python">
+								def tick(delta, tps):
+									boxvel.add(gravity)
+									box.x += boxvel.x
+									box.y += boxvel.y
+									if box.y > 600:
+										boxvel.y *= -0.8
+										
+								def render(delta, fps):
+									pgh.pygame.draw.rect(w.windowSurface, (255), box)</pre>
+                                <p>Tick():</p>
+                                <ol>
+                                    <li>Adding force of gravity to the boxes velocity.</li>
+                                    <li>Increasing the x, y of the boxes Rect by the x, y of the boxes velocity</li>
+                                    <li>Checking if the box collided with the floor</li>
+                                    <li>If it has collided, then inverse, the direction of the vector, this allows it to
+                                        bounce</li>
+                                </ol>
+                                <p>Note: "-0.8" can be set to any number, it is a measure of how elastic the box is, the
+                                    higher the number the less energy lost. This means that the ball stays bouncing for
+                                    a good while.</p>
+                                <p>Render()</p>
+                                <ol>
+                                    <li>Draw a box, using the the Rect object we defined earlier onto the window "w"
+                                    </li>
+                                </ol>
+                                <p>Note: We have to use "w.windowSurface" because "w" represents the class Window, not
+                                    the actual surface we can draw on.</p>
+                                <p>Nearly there, we just need to initialise the window, do binding, start the game loop
+                                    and we're done</p>
+                                <pre class="brush: python">
+								w.bindTick(tick)
+								w.bindRender(render)
+								w.initScreen()
+								w.startInternalGameLoop(20, 20)</pre>
+                                <p>It is very important to make the correct choice of tps and fps, especially in this
+                                    case where we are increasing the boxes velocity every tick.
+                                    So in this example both the strength of gravity and the tps affect the speed of the
+                                    boxes descent.
+                                    I chose 20 for both, anything lower than twenty and the jittering of frames becomes
+                                    apparent, anything higher than 20 and the box falls too fast.
+                                    You could also consider increasing the fps to 60, it wouldn't affect much.</p>
+                                <h5>More things to do with Vectors:</h5>
+                                <ul>
+                                    <li>Upgrade the demonstration to allow the box to bounce of all walls and have a
+                                        sideways gravity.</li>
+                                    <li>Use pgh.Circle() to make a ball follow the mouse using only vectors.</li>
+                                    <li>Create a small rocket simulation with adjustable throttle.</li>
+                                </ul>
                             </div>
 
                             <!-- end col -->
@@ -304,6 +432,7 @@
                         </div>
                         <!-- end row -->
 
+
                         <div class="row">
                             <div class="col-md-12">
 
@@ -311,18 +440,28 @@
 
                                 <hr>
 
-                                <h4>V0.1.0 - Sep 9th, 2020</h4>
+                                <h4>Current Version: V0.1.0 - Sep 9th, 2020</h4>
 
                                 <pre class="brush: plain">
 
                                 -----------------------------------------------------------------------------------------
-                                The Window Update
+                                The Updates
                                 -----------------------------------------------------------------------------------------
 
-                                - Added window class
+                                - Added Window() class "(V0.1.0)"	
                                     ├ Allows creation of a pygame window
                                     └ Managing of window resizes automagically handled! 
-
+								- Added Vector() class
+									└ Vectors without the hassle!
+								- Added Circle() class
+									└ Circles now get similar support as Rect()
+								- Added Button handling
+									├ Square button added (toggle-able)
+									├ Circle button added (toggle-able)
+									├ Buttons now take render priority over any user drawn items
+									└ The state of a button can now be easily used in tick() or render()
+								- Added Cartesian and Polar co-ord converters
+									└ For use internally and by user.
                                 </pre>
                             </div>
                         </div>

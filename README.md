@@ -2,7 +2,7 @@
 A helper module for Python's PyGame  
 Used to make development quicker, management easier and games more efficient
 
-![PyGame Helper](/pygameHelper/resources/icon/pygame.png)
+![PyGame Helper](/pygameHelper/src/resources/icon/pygame.png)
 
 ## Get It Here  
 To get PyGame Helper, go to the projects  [Releases](https://github.com/LordFarquhar/pygamehelper/releases/) navigate to the most recent full release and download the source code  
@@ -22,10 +22,10 @@ import PyGameHelper as pgh
 For further usage help see our [Website](https://lordfarquhar.github.io/pygamehelper/)
 
 ## License  
-![Creative Commons Attribute - NonCommercial](pygameHelper/resources/license/licenseImage.png)
+![Creative Commons Attribute - NonCommercial](pygameHelper/resources/src/license/licenseImage.png)
 
 We are licensed under the Creative Commons Attribute - NonCommercial 
-See LICENSE for more information
+See [LICENSE](https://github.com/LordFarquhar/pygamehelper/blob/master/LICENSE) for more information
 
 ## Contributing
 
